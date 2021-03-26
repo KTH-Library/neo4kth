@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  neo4j:
+    image: kthb/neo4kth
+    environment:
+      - NEO4J_dbms_import_csv_legacy__quote__escaping=true
+      - NEO4J_AUTH=neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./import:/var/lib/neo4j/import
+    entrypoint: ["/sbin/tini", "-g", "--"]
+    command: bash -c "/docker-entrypoint.sh neo4j-admin import --nodes=pubs=import/pubs-header.csv,import/pubs.csv --nodes=authors=import/authors-header.csv,import/authors.csv && /docker-entrypoint.sh neo4j"
+
