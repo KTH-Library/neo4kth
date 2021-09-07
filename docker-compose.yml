@@ -13,5 +13,5 @@ services:
       - ./import:/var/lib/neo4j/import
       - ./plugins:/plugins
     entrypoint: ["/sbin/tini", "-g", "--"]
-    command: bash -c "/docker-entrypoint.sh neo4j-admin import --nodes=pubs=import/pubs-header.csv,import/pubs.csv --nodes=authors=import/authors-header.csv,import/authors.csv --relationships=rels=import/rels-header.csv,import/rels.csv && /docker-entrypoint.sh neo4j --skip-bad-relationships"
+    command: bash -c "cp /plugins/*.jar /var/lib/neo4j/plugins && /docker-entrypoint.sh neo4j-admin import --nodes=pubs=import/pubs-header.csv,import/pubs.csv --nodes=authors=import/authors-header.csv,import/authors.csv --relationships=rels=import/rels-header.csv,import/rels.csv && /docker-entrypoint.sh neo4j --skip-bad-relationships"
 
