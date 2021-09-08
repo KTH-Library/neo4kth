@@ -12,12 +12,19 @@ Use this statement to check that plugins have loaded:
 
 		CALL dbms.procedures()
 
-## TODO
+## Loading data at start up
 
-See https://neo4j.com/labs/apoc/4.1/import/web-apis/#_using_s3_protocol for adding S3 protocol support:
+The command in the `docker-compose.yml`-file initiates bulk loading of data kept locally in the `import` folder.
 
-https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/1.11.250/aws-java-sdk-core-1.11.250.jar
-https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.250/aws-java-sdk-s3-1.11.250.jar
-https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.4/httpclient-4.5.4.jar
-https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.8/httpcore-4.4.8.jar
-https://repo1.maven.org/maven2/joda-time/joda-time/2.9.9/joda-time-2.9.9.jar
+To generate data files for the import directory, run `kthcorpus::neo4j_bulk_extract()`, see [this repo](https://github.com/kth-library/kthcorpus)
+
+## Loading data at run-time from S3
+
+
+See https://neo4j.com/labs/apoc/4.1/import/web-apis/#_using_s3_protocol. The plugins directory contains jars that provide S3 protocol support, which are copied into the /var/lib/neo4j/plugins directory at container startup..
+
+Data kan then be loading interactively / at run-time, for example using:
+
+		CALL apoc.load.csv('s3://minio.object.storage/bibliometrics/authors.csv?accessKey=myuser&secretKey=mypass',{sep:","}) YIELD lineNo, list, strings, map, stringMap
+
+
