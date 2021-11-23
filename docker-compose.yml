@@ -6,12 +6,15 @@ services:
     environment:
       - NEO4J_dbms_import_csv_legacy__quote__escaping=true
       - NEO4J_AUTH=neo4j/password
+    env_file:
+      - ./env/.s3auth
     ports:
       - "7474:7474"
       - "7687:7687"
     volumes:
       - ./import:/var/lib/neo4j/import
       - ./plugins:/plugins
+      - ./apoc.jar:/var/lib/neo4j/plugins/apoc.jar
     entrypoint: ["/sbin/tini", "-g", "--"]
     command: bash -c "cp /plugins/*.jar /var/lib/neo4j/plugins && /docker-entrypoint.sh neo4j-admin import --nodes=pubs=import/pubs-header.csv,import/pubs.csv --nodes=authors=import/authors-header.csv,import/authors.csv --relationships=rels=import/rels-header.csv,import/rels.csv && /docker-entrypoint.sh neo4j --skip-bad-relationships"
 
